@@ -1,7 +1,9 @@
 package com.nhnacademy.jdbc.board.user.mapper;
 
 import com.nhnacademy.jdbc.board.user.domain.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -13,8 +15,9 @@ public interface UserMapper {
     Optional<User> selectUser(long id);
     List<User> selectUsers();
 
-
-    void insertUser(User user);
+    @Insert("Insert into JdbcUsers value (#{user.name},#{user.password}")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insertUser(User user);
     void updateNameById(String name, long id);
     void deleteById(long id);
     @Select("Select * from JdbcUsers where username= #{name}")
