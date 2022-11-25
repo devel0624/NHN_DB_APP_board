@@ -1,11 +1,15 @@
 package com.nhnacademy.jdbc.board.user.service.impl;
 
+import com.nhnacademy.jdbc.board.exception.InvalidPassword;
+import com.nhnacademy.jdbc.board.exception.UserNotFound;
+import com.nhnacademy.jdbc.board.request.UserLoginRequest;
 import com.nhnacademy.jdbc.board.user.domain.User;
 import com.nhnacademy.jdbc.board.user.mapper.UserMapper;
 import com.nhnacademy.jdbc.board.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -13,6 +17,7 @@ import java.util.Optional;
  * @Date : 17/05/2022
  */
 
+@Slf4j
 @Service
 public class DefaultUserService implements UserService {
     private final UserMapper userMapper;
@@ -21,35 +26,25 @@ public class DefaultUserService implements UserService {
         this.userMapper = userMapper;
     }
 
-    @Override
-    public Optional<User> getUser(long id){
-        return userMapper.selectUser(id);
-    }
 
     @Override
-    public List<User> getAllUser(){
-        return userMapper.selectUsers();
-    }
+    public User login(UserLoginRequest userLoginRequest) {
 
-    @Override
-    public void addUser(User user){
-        userMapper.insertUser(user);
-    }
+        String id = userLoginRequest.getId();
+        String pwd = userLoginRequest.getPwd();
 
-    @Override
-    public void modifyUser(String name, long id){
-        userMapper.updateNameById(name,id);
-    }
+        Optional<User> user = Optional.ofNullable(userMapper.selectUserByName(id));
 
-    @Override
-    public void deleteUser(long id){
-        userMapper.deleteById(id);
+        if (user.isPresent()) {
+            if (user.get().getPwd().equals(pwd)) {
+                return user.get();
+            } else {
+                throw new InvalidPassword();
+            }
+        } else {
+            throw new UserNotFound();
+        }
     }
-    @Override
-    public User getUserByName(String name) {
-        return userMapper.selectUserByName(name);
-    }
-
 
 }
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>POST VIEW</h1>
+    제목<span th:text="${post.title}"></span> <br/>
+    작성자<span th:text="${post.writer}"></span> 작성시간<span th:text="${post.createdAt}"></span> <br/>
+    내용<span th:text="${post.content}"></span>
+    <br/>
+<form method="post" action="/reply">
+    작성자 <input type="text" name="writer" disabled="true"> <br/>
+    내용 <br/>
+    <textarea rows="2" cols="100" name="content" placeholder="내용을 입력해주세요" ></textarea><br/>
+    <input type="submit" value="댓글 작성">
+</form>
+</body>
+</html>

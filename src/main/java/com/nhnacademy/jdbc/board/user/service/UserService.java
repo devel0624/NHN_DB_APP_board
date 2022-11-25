@@ -1,20 +1,11 @@
 package com.nhnacademy.jdbc.board.user.service;
 
+import com.nhnacademy.jdbc.board.request.UserLoginRequest;
 import com.nhnacademy.jdbc.board.user.domain.User;
 
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
-     Optional<User> getUser(long id);
-
-     List<User> getAllUser();
-
-     void addUser(User user);
-
-     void modifyUser(String name, long id);
-
-     void deleteUser(long id);
-
-     User getUserByName(String name);
+     User login(UserLoginRequest userLoginRequest);
 }

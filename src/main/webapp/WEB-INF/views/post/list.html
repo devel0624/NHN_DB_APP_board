@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>POST LIST</h1>
+<span th:if="${username}==null"> 로그인해주세요
+    <input type="button" onclick="location.href='/login'" value="Login">
+</span>
+<span th:unless="${username}==null"  th:text="${username}"></span>
+
+
+<table th:if = "true">
+    <tr>
+        <td>제목</td>
+        <td>작성자</td>
+        <td>좋아요</td>
+        <td>작성시간</td>
+    </tr>
+    <tr th:each="post:${posts}">
+        <td th:text="${post.name}"></td>
+        <td th:text="${post.writer}"></td>
+        <td th:text="${post.like}"></td>
+        <td th:text="${post.createdAt}"></td>
+    </tr>
+</table>
+
+
+</body>
+</html>

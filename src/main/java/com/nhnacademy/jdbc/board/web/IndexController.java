@@ -12,19 +12,9 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping
-@Slf4j
 public class IndexController {
-    private final UserService userService;
-
-    public IndexController(DefaultUserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping(value = {"/","/index"})
     public String index(){
-        Optional<User> user = userService.getUser(1l);
-        user.ifPresent(value -> log.debug("user : {}", value));
-
         return "index/index";
     }
 }

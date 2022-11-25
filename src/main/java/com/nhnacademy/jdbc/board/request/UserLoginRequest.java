@@ -2,18 +2,21 @@ package com.nhnacademy.jdbc.board.request;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotBlank;
 
-@Setter
-@Getter
+@NoArgsConstructor
 public class UserLoginRequest {
 
+    @Getter
+    @Setter
     @NotBlank
-    String name;
+    String id;
 
+    @Getter
+    @Setter
     @NotBlank
     String pwd;
 }

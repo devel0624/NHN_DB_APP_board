@@ -1,10 +1,13 @@
-package com.nhnacademy.jdbc.board.config;
+package com.nhnacademy.jdbc.board;
 
+import com.nhnacademy.jdbc.board.config.WebConfig;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
+
 
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {

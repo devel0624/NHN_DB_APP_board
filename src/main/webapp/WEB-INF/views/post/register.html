@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>POST REGISTER</h1>
+<form method="post" action="/login">
+    제목<textarea cols="40" rows="1" name = "id"></textarea> <br/>
+    작성자 <input type="text" name = "writer" disabled="true"> <br/>
+    내용 <br/>
+    <textarea cols="100" rows="50" name = "content"></textarea> <br/>
+    <input type="submit"> <input type="button" onclick="location.href='/post/list'" value="작성 취소">
+</form>
+</body>
+</html>
