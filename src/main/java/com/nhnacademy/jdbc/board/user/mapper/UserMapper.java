@@ -12,6 +12,8 @@ public interface UserMapper {
     @Select("Select * from JdbcUsers where id = #{id}")
     Optional<User> selectUser(long id);
     List<User> selectUsers();
+
+
     void insertUser(User user);
     void updateNameById(String name, long id);
     void deleteById(long id);

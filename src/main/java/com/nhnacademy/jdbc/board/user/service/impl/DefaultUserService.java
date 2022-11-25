@@ -1,7 +1,7 @@
 package com.nhnacademy.jdbc.board.user.service.impl;
 
-import com.nhnacademy.jdbc.board.exception.InvalidPassword;
-import com.nhnacademy.jdbc.board.exception.UserNotFound;
+import com.nhnacademy.jdbc.board.exception.InvalidPasswordException;
+import com.nhnacademy.jdbc.board.exception.UserNotFoundException;
 import com.nhnacademy.jdbc.board.request.UserLoginRequest;
 import com.nhnacademy.jdbc.board.user.domain.User;
 import com.nhnacademy.jdbc.board.user.mapper.UserMapper;
@@ -9,7 +9,6 @@ import com.nhnacademy.jdbc.board.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,10 +38,10 @@ public class DefaultUserService implements UserService {
             if (user.get().getPwd().equals(pwd)) {
                 return user.get();
             } else {
-                throw new InvalidPassword();
+                throw new InvalidPasswordException();
             }
         } else {
-            throw new UserNotFound();
+            throw new UserNotFoundException();
         }
     }
 
