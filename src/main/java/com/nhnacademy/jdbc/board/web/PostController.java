@@ -92,13 +92,12 @@ public class PostController {
             throw new ValidationFailedException(result);
         }
 
-        Post post = new Post(0,request.getTitle(),request.getContent(),Long.parseLong(request.getWriterId()), Timestamp.valueOf(LocalDateTime.now()));
 
-        long postId = postService.registerPost(post);
+        Post post = postService.registerPost(request);
 
         model.addAttribute("post",post);
 
-        return "redirect:/post/view?postId="+postId;
+        return "redirect:/post/view?postId="+post.getPostId();
     }
 
     @PostMapping("/modify")
