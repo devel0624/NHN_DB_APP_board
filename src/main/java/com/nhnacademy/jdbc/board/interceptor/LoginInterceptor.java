@@ -18,10 +18,9 @@ public class LoginInterceptor implements HandlerInterceptor {
             try{
                 Cookie cookie = CookieManager.getCookie(request);
                 log.info("Login Session Exist : " + cookie.getValue());
-            }catch (LoginSessionNotExistException e){
+            }catch (Exception e){
                 response.sendRedirect("/login");
             }
-
             return true;
         }
 

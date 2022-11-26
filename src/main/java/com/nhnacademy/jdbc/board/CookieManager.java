@@ -1,7 +1,7 @@
 package com.nhnacademy.jdbc.board;
 
+import com.nhnacademy.jdbc.board.exception.NotDetectedAnySessionException;
 import com.nhnacademy.jdbc.board.exception.LoginSessionNotExistException;
-import com.nhnacademy.jdbc.board.interceptor.LoginInterceptor;
 import com.nhnacademy.jdbc.board.user.domain.User;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -30,15 +31,22 @@ public class CookieManager {
     }
 
     public static Cookie getCookie(HttpServletRequest request) {
+        log.info("cookies");
 
-        Optional<Cookie> cookie = Arrays.stream(request.getCookies())
-                .filter(x->x.getName().equals(COOKIE_NAME)).findFirst().stream().findFirst();
 
-        if(cookie.isEmpty()){
+        if(Objects.isNull(request.getCookies())) {
+            throw new NotDetectedAnySessionException();
+        }
+
+        Optional<Cookie> optionalCookie = Arrays.stream(request.getCookies()).filter(Objects::nonNull)
+                .filter(x->x.getName().equals(COOKIE_NAME))
+                .findFirst().stream().findFirst();
+
+        if(optionalCookie.isEmpty()) {
             throw new LoginSessionNotExistException();
         }
 
-        return cookie.get();
+        return optionalCookie.get();
     }
 
     public static void removeLoginSession(HttpServletRequest request,

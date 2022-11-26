@@ -9,8 +9,10 @@
 <form method="post" action="/post/register">
     제목<textarea cols="40" rows="1" name = "title"></textarea>
     <hr/>
-    작성자 ID 전달용 <input name = "writerId" th:value="${writerId}" >
-    작성자 <input type="text" th:value="${writerName}" disabled="true">
+    <div hidden>
+    작성자 ID 전달용 <input name = "writerId" th:value="${sessionUser.id}" >
+    </div>
+    작성자 <input type="text" th:value="${sessionUser.name}" disabled="true">
     <hr/>
     내용 <br/>
     <textarea cols="100" rows="50" name = "content"></textarea> <br/>

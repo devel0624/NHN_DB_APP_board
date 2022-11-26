@@ -10,16 +10,16 @@
     <h2> 제목 : <span th:text="${post.title}"></span> </h2>
     게시글 번호 : <span th:text="${post.postId}"></span>
     <hr/>
-    작성자 : <span th:text="${post.writer}"></span> 작성시간 : <span th:text="${post.createdAt}"></span>
+    작성자 : <span th:text="${post.writerName}"></span> 작성시간 : <span th:text="${post.createdAt}"></span>
     <hr/>
     내용 <br>
     <span th:text="${post.content}"></span>
     <hr/>
 
 <table>
+    <h3>댓글</h3>
     <span th:if="${replies.isEmpty()}"> 첫 댓글을 달아주세요</span>
     <th:block th:unless="${replies.isEmpty()}">
-        <caption>댓글</caption>
         <tr>
             <th>작성자</th>
             <th>내용</th>
@@ -30,7 +30,7 @@
             <td th:text="${reply.writer}"></td>
             <td th:text="${reply.content}"></td>
             <td th:text="${reply.createdAt}"></td>
-            <td th:if="${reply.userId} == ${writer.id}">
+            <td th:if="${reply.userId} == ${sessionUser.id}">
                 <a th:href="@{/reply/delete(replyId=${reply.replyId})}"> 댓글 삭제</a>
             </td>
         </tr>
@@ -40,9 +40,9 @@
 <form method="post" action="/reply">
     <div hidden>
         게시물 번호<input type="text" th:value="${post.postId}" name="postId">
-        작성자 번호<input type="text" th:value="${writer.id}" name = "writerId" >
+        작성자 번호<input type="text" th:value="${sessionUser.id}" name = "writerId" >
     </div>
-    작성자 <input type="text" th:value="${writer.name}" disabled="true"> <br/>
+    작성자 <input type="text" th:value="${sessionUser.name}" disabled="true"> <br/>
     <textarea rows="2" cols="100" name="content" placeholder="내용을 입력해주세요" ></textarea><br/>
     <input type="submit" value="댓글 작성">
 </form>

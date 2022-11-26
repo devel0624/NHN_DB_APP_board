@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
             registry.addInterceptor(new LoginInterceptor())
                     .order(1)
                     .addPathPatterns("/**")
-                    .excludePathPatterns(List.of("/","/login","post/list"));
+                    .excludePathPatterns(List.of("/","/login","/post/list"));
     }
 
     @Override

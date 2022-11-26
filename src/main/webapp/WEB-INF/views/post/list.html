@@ -8,13 +8,13 @@
 
 <h1>POST LIST</h1>
 
-<th:block th:if="${user} == null">
+<th:block th:if="${sessionUser} == null">
     로그인해주세요
     <input type="button" onclick="location.href='/login'" value="Login">
 </th:block>
 
-<th:block th:unless="${user} == null">
-    <span th:text="${user.name}"></span>
+<th:block th:unless="${sessionUser} == null">
+    <span th:text="${sessionUser.name}"></span>
     <input type="button" onclick="location.href='/logout'" value="Logout"> <br/>
 
     <input type="button" onclick="location.href='/post/register'" value="Register Post">

@@ -3,6 +3,7 @@ package com.nhnacademy.jdbc.board.web;
 import com.nhnacademy.jdbc.board.CookieManager;
 import com.nhnacademy.jdbc.board.exception.ValidationFailedException;
 import com.nhnacademy.jdbc.board.post.domain.Post;
+import com.nhnacademy.jdbc.board.post.domain.PostVo;
 import com.nhnacademy.jdbc.board.post.service.PostService;
 import com.nhnacademy.jdbc.board.reply.domain.Reply;
 import com.nhnacademy.jdbc.board.reply.domain.ReplyVo;
@@ -38,19 +39,38 @@ public class PostController {
         this.replyService = replyService;
     }
 
+    @ModelAttribute("sessionUser")
+    public SessionUser getSessionUser(HttpServletRequest request){
+
+        try{
+            Cookie cookie = CookieManager.getCookie(request);
+
+            String userInfo = cookie.getValue();
+
+            StringTokenizer st = new StringTokenizer(userInfo,"|");
+
+            return new SessionUser(st.nextToken(),Long.parseLong(st.nextToken()));
+        }catch (Exception e){
+            log.info(""+e);
+        }
+
+        return null;
+    }
+
     @GetMapping(value = {"/","/list"})
-    public String redirectPostList(){
+    public String redirectPostList(@ModelAttribute("sessionUser") SessionUser user,
+                                   Model model){
+
+        model.addAttribute("sessionUser",user);
+
         return "post/list";
     }
 
     @GetMapping("/register")
-    public String redirectPostRegister(HttpServletRequest request,
+    public String redirectPostRegister(@ModelAttribute("sessionUser") SessionUser user,
                                        Model model){
 
-        SessionUser sessionUser = getSessionUser(request);
-
-        model.addAttribute("writerName",sessionUser.getName());
-        model.addAttribute("writerId",sessionUser.getId());
+        model.addAttribute("sessionUser",user);
 
         return "post/register";
     }
@@ -72,14 +92,13 @@ public class PostController {
 
         SessionUser sessionUser = getSessionUser(request);
 
-        Post post = postService.getPostById(postId);
+        PostVo post = postService.getPostById(postId);
         List<ReplyVo> replies = replyService.getRepliesByPostId(postId);
-
 
 
         mav.addObject("post",post);
         mav.addObject("replies",replies);
-        mav.addObject("writer",sessionUser);
+        mav.addObject("sessionUser",sessionUser);
 
         mav.setViewName("post/view");
 
@@ -118,15 +137,4 @@ public class PostController {
 
         return "post/view";
     }
-
-    public SessionUser getSessionUser(HttpServletRequest request){
-        Cookie cookie = CookieManager.getCookie(request);
-
-        String userInfo = cookie.getValue();
-
-        StringTokenizer st = new StringTokenizer(userInfo,"|");
-
-        return new SessionUser(st.nextToken(),Long.parseLong(st.nextToken()));
-    }
-
 }

@@ -51,7 +51,7 @@ public class LoginController {
 
         model.addAttribute("user",user);
 
-        return "post/list";
+        return "redirect:/post/list";
     }
 
     @GetMapping("/logout")
