@@ -1,5 +1,6 @@
 package com.nhnacademy.jdbc.board.interceptor;
 
+import com.nhnacademy.jdbc.board.CookieManager;
 import com.nhnacademy.jdbc.board.exception.LoginSessionNotExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,7 +16,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
             try{
-                Cookie cookie = getCookie(request);
+                Cookie cookie = CookieManager.getCookie(request);
                 log.info("Login Session Exist : " + cookie.getValue());
             }catch (LoginSessionNotExistException e){
                 response.sendRedirect("/login");
@@ -23,20 +24,5 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             return true;
         }
-
-    public static Cookie getCookie(HttpServletRequest request) {
-
-        String cookieName = "LoginSession";
-
-        Optional<Cookie> cookie = Arrays.stream(request.getCookies())
-                .filter(x->x.getName().equals(cookieName)).findFirst().stream().findFirst();
-
-        if(cookie.isEmpty()){
-            throw new LoginSessionNotExistException();
-        }
-
-        return cookie.get();
-    }
-
 
 }

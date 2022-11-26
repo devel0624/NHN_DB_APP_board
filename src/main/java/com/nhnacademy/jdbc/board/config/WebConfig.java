@@ -1,7 +1,7 @@
 package com.nhnacademy.jdbc.board.config;
 
-import com.nhnacademy.jdbc.board.ControllerBase;
 import com.nhnacademy.jdbc.board.interceptor.LoginInterceptor;
+import com.nhnacademy.jdbc.board.web.ControllerBase;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -32,10 +32,10 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//            registry.addInterceptor(new LoginInterceptor())
-//                    .order(1)
-//                    .addPathPatterns("/**")
-//                    .excludePathPatterns(List.of("/","/login"));
+            registry.addInterceptor(new LoginInterceptor())
+                    .order(1)
+                    .addPathPatterns("/**")
+                    .excludePathPatterns(List.of("/","/login","post/list"));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
         return templateResolver;
     }
 
-    @Bean
+//    @Bean
     RequestMappingHandlerAdapter requestMappingHandlerAdapter(){
         RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();
         requestMappingHandlerAdapter.setIgnoreDefaultModelOnRedirect(false);

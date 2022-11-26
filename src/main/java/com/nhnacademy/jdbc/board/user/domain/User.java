@@ -11,13 +11,14 @@ import java.time.LocalDateTime;
 
 @Getter
 public class User {
-    private final int id;
+
+    private final int userId;
     private final String name;
     private final String pwd;
     private final LocalDateTime createdAt;
 
-    public User(int id, String name, String pwd, LocalDateTime createdAt) {
-        this.id = id;
+    public User(int userId, String name, String pwd, LocalDateTime createdAt) {
+        this.userId = userId;
         this.name = name;
         this.pwd = pwd;
         this.createdAt = createdAt;
@@ -26,9 +27,9 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "userId=" + userId +
                 ", name='" + name + '\'' +
-                ", password='" + pwd + '\'' +
+                ", pwd='" + pwd + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }

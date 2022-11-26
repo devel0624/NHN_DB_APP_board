@@ -5,7 +5,8 @@ import com.nhnacademy.jdbc.board.request.PostModifyRequest;
 import com.nhnacademy.jdbc.board.request.PostRegisterRequest;
 
 public interface PostService {
-    Post getPostById(String postId);
+
+    Post getPostById(long postId);
     Post modifyPost(PostModifyRequest request);
-    Post registerPost(PostRegisterRequest request);
+    int registerPost(PostRegisterRequest request);
 }

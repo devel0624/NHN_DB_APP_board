@@ -7,11 +7,18 @@
 <body>
 
 <h1>POST LIST</h1>
-<span th:if="${username}==null"> 로그인해주세요
-    <input type="button" onclick="location.href='/login'" value="Login">
-</span>
-<span th:unless="${username}==null"  th:text="${username}"></span>
 
+<th:block th:if="${user} == null">
+    로그인해주세요
+    <input type="button" onclick="location.href='/login'" value="Login">
+</th:block>
+
+<th:block th:unless="${user} == null">
+    <span th:text="${user.name}"></span>
+    <input type="button" onclick="location.href='/logout'" value="Logout"> <br/>
+
+    <input type="button" onclick="location.href='/post/register'" value="Register Post">
+</th:block>
 
 <table th:if = "true">
     <tr>

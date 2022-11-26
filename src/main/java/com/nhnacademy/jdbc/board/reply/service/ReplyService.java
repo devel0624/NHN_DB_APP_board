@@ -6,6 +6,6 @@ import com.nhnacademy.jdbc.board.request.ReplyRegisterRequest;
 import java.util.List;
 
 public interface ReplyService {
-    List<Reply> getReplyByPostId(String postId);
+    List<Reply> getReplyByPostId(long postId);
     void insertReply(ReplyRegisterRequest replyRegisterRequest);
 }

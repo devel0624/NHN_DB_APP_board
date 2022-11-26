@@ -1,0 +1,105 @@
+CREATE TABLE `User` (
+	`user_id`	INTEGER	NOT NULL,
+	`username`	VARCHAR(20)	NOT NULL,
+	`password`	VARCHAR(30)	NOT NULL,
+	`created_at`	DATETIME	NOT NULL,
+);
+
+CREATE TABLE `Post` (
+	`post_id`	INTEGER	NOT NULL,
+	`title`	VARCHAR(30)	NOT NULL,
+	`content`	VARCHAR(2000)	NOT NULL,
+	`user_id`	INTEGER	NOT NULL,
+	`created_at`	DATETIME	NOT NULL,
+	`modify_id`	INTEGER	NULL
+);
+
+CREATE TABLE `Reply` (
+	`reply_id`	INTEGER	NOT NULL,
+	`post_id`	INTEGER	NOT NULL,
+	`user_id`	INTEGER	NOT NULL,
+	`content`	VARCHAR(500)	NOT NULL
+);
+
+CREATE TABLE `LikeAtPost` (
+	`post_id`	INTEGER	NOT NULL,
+	`user_id`	INTEGER	NOT NULL
+);
+
+CREATE TABLE `PostModifyHistory` (
+	`modify_id`	INTEGER	NOT NULL,
+	`modify_user_id`	INTEGER	NOT NULL,
+	`modify_at`	DATETIME	NOT NULL
+);
+
+ALTER TABLE `User` ADD CONSTRAINT `PK_USER` PRIMARY KEY (
+	`user_id`
+);
+
+ALTER TABLE `Post` ADD CONSTRAINT `PK_POST` PRIMARY KEY (
+	`post_id`
+);
+
+ALTER TABLE `Reply` ADD CONSTRAINT `PK_REPLY` PRIMARY KEY (
+	`reply_id`,
+	`post_id`
+);
+
+ALTER TABLE `LikeAtPost` ADD CONSTRAINT `PK_LIKEATPOST` PRIMARY KEY (
+	`post_id`,
+	`user_id`
+);
+
+ALTER TABLE `PostModifyHistory` ADD CONSTRAINT `PK_POSTMODIFYHISTORY` PRIMARY KEY (
+	`modify_id`
+);
+
+ALTER TABLE `Post` ADD CONSTRAINT `FK_User_TO_Post_1` FOREIGN KEY (
+	`user_id`
+)
+REFERENCES `User` (
+	`user_id`
+);
+
+ALTER TABLE `Post` ADD CONSTRAINT `FK_PostModifyHistory_TO_Post_1` FOREIGN KEY (
+	`modify_id`
+)
+REFERENCES `PostModifyHistory` (
+	`modify_id`
+);
+
+ALTER TABLE `Reply` ADD CONSTRAINT `FK_Post_TO_Reply_1` FOREIGN KEY (
+	`post_id`
+)
+REFERENCES `Post` (
+	`post_id`
+);
+
+ALTER TABLE `Reply` ADD CONSTRAINT `FK_User_TO_Reply_1` FOREIGN KEY (
+	`user_id`
+)
+REFERENCES `User` (
+	`user_id`
+);
+
+ALTER TABLE `LikeAtPost` ADD CONSTRAINT `FK_Post_TO_LikeAtPost_1` FOREIGN KEY (
+	`post_id`
+)
+REFERENCES `Post` (
+	`post_id`
+);
+
+ALTER TABLE `LikeAtPost` ADD CONSTRAINT `FK_User_TO_LikeAtPost_1` FOREIGN KEY (
+	`user_id`
+)
+REFERENCES `User` (
+	`user_id`
+);
+
+ALTER TABLE `PostModifyHistory` ADD CONSTRAINT `FK_User_TO_PostModifyHistory_1` FOREIGN KEY (
+	`modify_user_id`
+)
+REFERENCES `User` (
+	`user_id`
+);
+

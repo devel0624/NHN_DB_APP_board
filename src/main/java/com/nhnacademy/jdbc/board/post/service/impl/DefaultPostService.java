@@ -1,16 +1,27 @@
 package com.nhnacademy.jdbc.board.post.service.impl;
 
+import com.nhnacademy.jdbc.board.post.PostMapper;
 import com.nhnacademy.jdbc.board.post.domain.Post;
 import com.nhnacademy.jdbc.board.post.service.PostService;
 import com.nhnacademy.jdbc.board.request.PostModifyRequest;
 import com.nhnacademy.jdbc.board.request.PostRegisterRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class DefaultPostService implements PostService {
+
+    private final PostMapper postMapper;
+
+    public DefaultPostService(PostMapper postMapper) {
+        this.postMapper = postMapper;
+    }
+
+
     @Override
-    public Post getPostById(String postId) {
-        return null;
+    public Post getPostById(long postId) {
+        return postMapper.selectPostById(postId);
     }
 
     @Override
@@ -19,7 +30,7 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
-    public Post registerPost(PostRegisterRequest request) {
-        return null;
+    public int registerPost(PostRegisterRequest request) {
+        return postMapper.insertPost(request.getTitle(),request.getContent(),request.getWriterId());
     }
 }

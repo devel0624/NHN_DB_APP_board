@@ -14,7 +14,7 @@ public class DefaultReplyService implements ReplyService {
 
     }
     @Override
-    public List<Reply> getReplyByPostId(String postId) {
+    public List<Reply> getReplyByPostId(long postId) {
         return null;
     }
 }

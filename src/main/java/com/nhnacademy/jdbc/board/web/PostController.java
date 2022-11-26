@@ -48,14 +48,15 @@ public class PostController {
     }
 
     @GetMapping("/view")
-    public ModelAndView redirectPostView(@RequestParam("postId") String postId){
+    public ModelAndView redirectPostView(@RequestParam("postId") long postId){
         ModelAndView mav = new ModelAndView();
 
         Post post = postService.getPostById(postId);
-        List<Reply> Replies = replyService.getReplyByPostId(postId);
+
+        List<Reply> replies = replyService.getReplyByPostId(postId);
 
         mav.addObject("post",post);
-        mav.addObject("replys",Replies);
+        mav.addObject("replys",replies);
 
         mav.setViewName("post/view");
 
@@ -63,24 +64,28 @@ public class PostController {
     }
 
     @PostMapping("/register")
-    public String PostRegister(@ModelAttribute PostRegisterRequest request,
+    public String registerPost(@ModelAttribute PostRegisterRequest request,
                                BindingResult result,
                                Model model){
+
         if(result.hasErrors()){
             throw new ValidationFailedException(result);
         }
 
-        Post post = postService.registerPost(request);
+        int postId = postService.registerPost(request);
+
+        Post post = postService.getPostById(postId);
 
         model.addAttribute("post",post);
 
         return "post/view";
     }
 
-    @PostMapping("/register")
-    public String PostRegister(@ModelAttribute PostModifyRequest request,
-                               BindingResult result,
-                               Model model){
+    @PostMapping("/modify")
+    public String modifyPost(@ModelAttribute PostModifyRequest request,
+                             BindingResult result,
+                             Model model){
+
         if(result.hasErrors()){
             throw new ValidationFailedException(result);
         }

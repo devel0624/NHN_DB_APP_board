@@ -1,11 +1,13 @@
 package com.nhnacademy.jdbc.board.post.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Getter
 public class Post {
+
     private final long  postId;
     private final String title;
     private final String content;
@@ -18,5 +20,16 @@ public class Post {
         this.writer = writer;
         this.content = content;
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId=" + postId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", writer='" + writer + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

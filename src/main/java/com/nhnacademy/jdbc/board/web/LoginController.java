@@ -1,5 +1,6 @@
 package com.nhnacademy.jdbc.board.web;
 
+import com.nhnacademy.jdbc.board.CookieManager;
 import com.nhnacademy.jdbc.board.exception.ValidationFailedException;
 import com.nhnacademy.jdbc.board.interceptor.LoginInterceptor;
 import com.nhnacademy.jdbc.board.request.UserLoginRequest;
@@ -40,46 +41,29 @@ public class LoginController {
                         BindingResult bindingResult,
                         Model model){
 
-        log.info("" + bindingResult.toString());
-
         if(bindingResult.hasErrors()){
             throw new ValidationFailedException(bindingResult);
         }
 
         User user = userService.login(userLoginRequest);
-        generateLoginSession(response,user);
+
+        CookieManager.generateLoginSession(response,user);
 
         model.addAttribute("user",user);
-
-        return "post/postList";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response){
-        deleteLoginSession(request, response);
 
         return "post/list";
     }
 
-    public static void generateLoginSession(HttpServletResponse response, User user){
-        Cookie cookie = new Cookie("LoginSession",user.getName() + user.getId());
-        cookie.setMaxAge(20000);
-        response.addCookie(cookie);
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response){
 
-        log.info("Generate Login Session");
+        CookieManager.removeLoginSession(request, response);
 
+        return "redirect:/post/list";
     }
 
-    public void deleteLoginSession(HttpServletRequest request,
-                                   HttpServletResponse response){
 
-        Cookie cookie = LoginInterceptor.getCookie(request);
 
-        cookie.setValue(null);
-        cookie.setMaxAge(0);
 
-        response.addCookie(cookie);
 
-        log.info("Delete Login Session");
-    }
 }
