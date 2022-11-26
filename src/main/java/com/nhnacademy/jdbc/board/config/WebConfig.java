@@ -83,7 +83,7 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware, Mes
     @Bean
     RequestMappingHandlerAdapter requestMappingHandlerAdapter(){
         RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();
-        requestMappingHandlerAdapter.setIgnoreDefaultModelOnRedirect(true);
+        requestMappingHandlerAdapter.setIgnoreDefaultModelOnRedirect(false);
         return requestMappingHandlerAdapter;
     }
 
