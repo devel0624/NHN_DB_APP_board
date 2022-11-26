@@ -6,13 +6,31 @@
 </head>
 <body>
     <h1>POST VIEW</h1>
-    제목<span th:text="${post.title}"></span> <br/>
-    작성자<span th:text="${post.writer}"></span> 작성시간<span th:text="${post.createdAt}"></span> <br/>
-    내용<span th:text="${post.content}"></span>
-    <br/>
+    <hr/>
+    <pre>게시글 번호 : <span th:text="${post.postId}"></span></pre>
+    제목 : <span th:text="${post.title}"></span>
+    <hr/>
+    작성자 : <span th:text="${post.writer}"></span> 작성시간 : <span th:text="${post.createdAt}"></span>
+    <hr/>
+    내용 <br>
+    <span th:text="${post.content}"></span>
+    <hr/>
+
+<table>
+    <tr>
+        <th>작성자</th>
+        <th>내용</th>
+    </tr>
+    <tr th:each="reply: ${replies}">
+        <td th:text="${reply.writer}"></td>
+        <td th:text="${reply.content}"></td>
+    </tr>
+
+</table>
+
 <form method="post" action="/reply">
+    댓글 작성 <br/>
     작성자 <input type="text" name="writer" disabled="true"> <br/>
-    내용 <br/>
     <textarea rows="2" cols="100" name="content" placeholder="내용을 입력해주세요" ></textarea><br/>
     <input type="submit" value="댓글 작성">
 </form>
