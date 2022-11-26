@@ -23,6 +23,6 @@ public class ReplyController {
     public String registerReply(@Valid @ModelAttribute ReplyRegisterRequest replyRegisterRequest){
         replyService.insertReply(replyRegisterRequest);
 
-        return "post/view";
+        return "redirect:/post/view?postId="+replyRegisterRequest.getPostId();
     }
 }

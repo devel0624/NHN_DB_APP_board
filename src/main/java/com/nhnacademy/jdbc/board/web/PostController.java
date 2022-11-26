@@ -5,9 +5,11 @@ import com.nhnacademy.jdbc.board.exception.ValidationFailedException;
 import com.nhnacademy.jdbc.board.post.domain.Post;
 import com.nhnacademy.jdbc.board.post.service.PostService;
 import com.nhnacademy.jdbc.board.reply.domain.Reply;
+import com.nhnacademy.jdbc.board.reply.domain.ReplyVo;
 import com.nhnacademy.jdbc.board.reply.service.ReplyService;
 import com.nhnacademy.jdbc.board.request.PostModifyRequest;
 import com.nhnacademy.jdbc.board.request.PostRegisterRequest;
+import com.nhnacademy.jdbc.board.user.domain.SessionUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,14 +46,11 @@ public class PostController {
     @GetMapping("/register")
     public String redirectPostRegister(HttpServletRequest request,
                                        Model model){
-        Cookie cookie = CookieManager.getCookie(request);
 
-        String userInfo = cookie.getValue();
+        SessionUser sessionUser = getSessionUser(request);
 
-        StringTokenizer st = new StringTokenizer(userInfo,"|");
-
-        model.addAttribute("writerName",st.nextToken());
-        model.addAttribute("writerId",st.nextToken());
+        model.addAttribute("writerName",sessionUser.getName());
+        model.addAttribute("writerId",sessionUser.getId());
 
         return "post/register";
     }
@@ -67,16 +66,20 @@ public class PostController {
     }
 
     @GetMapping("/view")
-    public ModelAndView redirectPostView(@RequestParam("postId") long postId){
+    public ModelAndView redirectPostView(@RequestParam("postId") long postId,
+                                         HttpServletRequest request){
         ModelAndView mav = new ModelAndView();
 
-        log.info(""+postId);
-        Post post = postService.getPostById(postId);
+        SessionUser sessionUser = getSessionUser(request);
 
-        List<Reply> replies = replyService.getRepliesByPostId(postId);
+        Post post = postService.getPostById(postId);
+        List<ReplyVo> replies = replyService.getRepliesByPostId(postId);
+
+
 
         mav.addObject("post",post);
         mav.addObject("replies",replies);
+        mav.addObject("writer",sessionUser);
 
         mav.setViewName("post/view");
 
@@ -114,6 +117,16 @@ public class PostController {
         model.addAttribute("post",post);
 
         return "post/view";
+    }
+
+    public SessionUser getSessionUser(HttpServletRequest request){
+        Cookie cookie = CookieManager.getCookie(request);
+
+        String userInfo = cookie.getValue();
+
+        StringTokenizer st = new StringTokenizer(userInfo,"|");
+
+        return new SessionUser(st.nextToken(),Long.parseLong(st.nextToken()));
     }
 
 }

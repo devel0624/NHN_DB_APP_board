@@ -1,6 +1,6 @@
 package com.nhnacademy.jdbc.board.post.service.impl;
 
-import com.nhnacademy.jdbc.board.post.PostMapper;
+import com.nhnacademy.jdbc.board.post.mapper.PostMapper;
 import com.nhnacademy.jdbc.board.post.domain.Post;
 import com.nhnacademy.jdbc.board.post.service.PostService;
 import com.nhnacademy.jdbc.board.request.PostModifyRequest;

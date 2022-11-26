@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UserLoginRequest {
 
-
     @NotBlank
     String id;
 

@@ -13,7 +13,6 @@ public interface UserMapper {
     List<User> selectUsers();
 
     @Insert("Insert into DBAppUsers(username, password, created_at) values (#{user.name},#{user.password},now())")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertUser(User user);
 
     void updateNameById(String name, long id);
