@@ -11,15 +11,20 @@
     게시글 번호 : <span th:text="${post.postId}"></span>
 <hr/>
     작성자 : <span th:text="${post.writerName}"></span> 작성시간 : <span th:text="${post.createdAt}"></span>
+    <th:block th:if="${post.modifyUser} != null ">
+        <br/>
+        수정 : <span th:text="${post.modifyUser}"></span> 수정시간 : <span th:text="${post.modifyAt}"></span>
+    </th:block>
 <hr/>
-    내용 <br>
+    내용 <br/>
     <span th:text="${post.content}"></span>
-<hr/>
+
 
     <!--    게시글 수정 및 삭제  -->
     <th:block th:unless="${sessionUser} == null">
         <th:block th:if="${post.available}">
             <th:block th:if="${post.writerId} == ${sessionUser.id} or ${sessionUser.admin}">
+<hr/>
                 <button th:onclick="|location.href='@{/post/modify(postId=${post.postId})}'|">게시글 수정</button>
             </th:block>
             <th:block th:if="${post.writerId} == ${sessionUser.id} or ${sessionUser.admin}">
@@ -38,9 +43,9 @@
 
 <table>
     <h3>댓글 <span th:text="${post.repliesCount}"></span> 개</h3>
-    <span th:if="${replies.isEmpty()}"> 첫 댓글을 달아주세요 </span>
+    <span th:if="${post.repliesCount} == 0"> 첫 댓글을 달아주세요 </span>
 
-    <th:block th:unless="${replies.isEmpty()}">
+    <th:block th:unless="${post.repliesCount} == 0">
         <tr>
             <th>작성자</th>
             <th>내용</th>
@@ -58,9 +63,10 @@
                     <td th:text="${reply.content}"></td>
                     <td th:text="${reply.createdAt}"></td>
 
-<!--                    관리자 및 작성자 본인 댓글 삭제  -->
+<!--                    관리자 및 작성자 본인 댓글 수정, 삭제  -->
                     <th:block th:if="${reply.available}">
                         <td th:if="${reply.userId} == ${sessionUser.id} or ${sessionUser.admin}">
+<!--                            <button th:onclick="|location.href='@{/reply/modify(replyId=${reply.replyId},postId=${post.postId})}'|"> 댓글 수정</button>-->
                             <button th:onclick="|location.href='@{/reply/delete(replyId=${reply.replyId},postId=${post.postId})}'|"> 댓글 삭제</button>
                         </td>
                     </th:block>

@@ -23,7 +23,7 @@ public class CookieManager {
     public static void generateLoginSession(HttpServletResponse response, User user){
 
         Cookie cookie = new Cookie(COOKIE_NAME,user.getName() +"|"+ user.getUserId());
-        cookie.setMaxAge(20000);
+        cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
         log.info("Generate Login Session Cookie");
@@ -31,8 +31,6 @@ public class CookieManager {
     }
 
     public static Cookie getCookie(HttpServletRequest request) {
-        log.info("cookies");
-
 
         if(Objects.isNull(request.getCookies())) {
             throw new NotDetectedAnySessionException();

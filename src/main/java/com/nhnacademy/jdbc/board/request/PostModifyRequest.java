@@ -16,9 +16,12 @@ public class PostModifyRequest{
     String title;
 
     @NotBlank
-    long writerId;
+    String writerId;
 
     @Length(min = 1,max = 2000)
     String content;
+
+    @NotBlank
+    String postId;
 
 }

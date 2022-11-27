@@ -17,4 +17,7 @@ public class PostVo {
     Timestamp createdAt;
     long repliesCount;
     boolean available;
+
+    String modifyUser;
+    Timestamp modifyAt;
 }

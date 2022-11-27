@@ -66,7 +66,7 @@
 
 </table>
 
-<th:block th:unless="${currentPage}<=1">
+<th:block th:unless="${currentPage}<=0">
     <a th:href="@{/post/list(page=${currentPage}-1)}"> <<< </a>
 </th:block>
 

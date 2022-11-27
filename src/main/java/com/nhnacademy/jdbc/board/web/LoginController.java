@@ -1,8 +1,9 @@
 package com.nhnacademy.jdbc.board.web;
 
 import com.nhnacademy.jdbc.board.CookieManager;
+import com.nhnacademy.jdbc.board.exception.LoginSessionNotExistException;
+import com.nhnacademy.jdbc.board.exception.NotDetectedAnySessionException;
 import com.nhnacademy.jdbc.board.exception.ValidationFailedException;
-import com.nhnacademy.jdbc.board.interceptor.LoginInterceptor;
 import com.nhnacademy.jdbc.board.request.UserLoginRequest;
 import com.nhnacademy.jdbc.board.user.domain.User;
 import com.nhnacademy.jdbc.board.user.service.UserService;
@@ -13,9 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -31,8 +30,17 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String redicretLoginForm(){
-        return "login/loginForm";
+    public String redicretLoginForm(HttpServletRequest request){
+        try {
+            CookieManager.getCookie(request);
+        }catch (LoginSessionNotExistException e){
+            log.info("LoginSession already exist");
+            return "login/loginForm";
+        }catch (NotDetectedAnySessionException e){
+            log.info("SessionCookie is Empty");
+            return "login/loginForm";
+        }
+        return "redirect:/post/list";
     }
 
     @PostMapping("/login")

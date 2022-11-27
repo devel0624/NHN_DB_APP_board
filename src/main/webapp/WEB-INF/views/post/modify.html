@@ -6,17 +6,27 @@
 </head>
 <body>
 <h1>POST MODIFY</h1>
-<form method="post" action="/login">
-    <div>
-        제목<textarea cols="40" rows="1" name = "title" placeholder="내용을 입력해주세요" th:text="${post.title}"> </textarea>
+<hr/>
+<form method="post" action="/post/modify">
+    <div hidden>
+        수정할 게시물 ID 전달용 <input name = "postId" th:value="${post.postId}" >
     </div>
     <div>
-        작성자 <input type="text" name = "writer" disabled="true" th:text="${post.writer}">
+        제목<textarea cols="40" rows="1" name = "title"  th:text="${post.title}"> </textarea>
     </div>
+<hr/>
+    <div hidden>
+        수정자 ID 전달용 <input name = "writerId" th:value="${sessionUser.id}" >
+    </div>
+    <div>
+        수정자 <input type="text" name = "writer" th:value="${sessionUser.name}" disabled>
+    </div>
+<hr/>
     <div>
         내용 <br/>
         <textarea cols="100" rows="50" name = "content" placeholder="내용을 입력해주세요" th:text="${post.content}" ></textarea>
     </div>
+<hr/>
     <input type="submit" value="글 작성"> <input type="button" onclick="location.href='/post/list'" value="작성 취소">
 </form>
 </body>

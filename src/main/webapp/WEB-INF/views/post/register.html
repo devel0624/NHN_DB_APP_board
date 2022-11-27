@@ -6,16 +6,24 @@
 </head>
 <body>
 <h1>POST REGISTER</h1>
+<hr/>
 <form method="post" action="/post/register">
-    제목<textarea cols="40" rows="1" name = "title"></textarea>
-    <hr/>
+    <div>
+    제목<textarea cols="40" rows="1" name = "title" placeholder="내용을 입력해주세요"></textarea>
+    </div>
+<hr/>
     <div hidden>
     작성자 ID 전달용 <input name = "writerId" th:value="${sessionUser.id}" >
     </div>
+    <div>
     작성자 <input type="text" th:value="${sessionUser.name}" disabled="true">
-    <hr/>
-    내용 <br/>
-    <textarea cols="100" rows="50" name = "content"></textarea> <br/>
+    </div>
+<hr/>
+    <div>
+        내용 <br/>
+        <textarea cols="100" rows="50" name = "content" placeholder="내용을 입력해주세요"></textarea> <br/>
+    </div>
+<hr/>
     <input type="submit"> <input type="button" onclick="location.href='/post/list'" value="작성 취소">
 </form>
 </body>

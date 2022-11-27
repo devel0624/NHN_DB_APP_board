@@ -1,5 +1,6 @@
 package com.nhnacademy.jdbc.board.post.service.impl;
 
+import com.nhnacademy.jdbc.board.mapper.HistoryMapper;
 import com.nhnacademy.jdbc.board.page.Page;
 import com.nhnacademy.jdbc.board.valueobject.PostVo;
 import com.nhnacademy.jdbc.board.mapper.PostMapper;
@@ -19,10 +20,12 @@ import java.util.List;
 public class DefaultPostService implements PostService {
 
     private final PostMapper postMapper;
+    private final HistoryMapper historyMapper;
 
     private static final long PAGE_SIZE = 20;
-    public DefaultPostService(PostMapper postMapper) {
+    public DefaultPostService(PostMapper postMapper, HistoryMapper historyMapper) {
         this.postMapper = postMapper;
+        this.historyMapper = historyMapper;
     }
 
 
@@ -32,8 +35,9 @@ public class DefaultPostService implements PostService {
     }
 
     @Override
-    public Post modifyPost(PostModifyRequest request) {
-        return null;
+    public void modifyPost(PostModifyRequest request) {
+        postMapper.updatePostById(request);
+        historyMapper.insertModifyHistory(Long.parseLong(request.getPostId()), Long.parseLong(request.getWriterId()));
     }
 
     @Override
@@ -51,7 +55,8 @@ public class DefaultPostService implements PostService {
     }
     @Override
     public Page<PostVo> getAllPostByPage(long page) {
-        List<PostVo> posts = postMapper.selectAllPostsWithPages(page,PAGE_SIZE);
+
+        List<PostVo> posts = postMapper.selectAllPostsWithPages((page - 1) * PAGE_SIZE,PAGE_SIZE);
         long totalCount = postMapper.totalPostCount();
         long pageCount;
 
@@ -75,5 +80,10 @@ public class DefaultPostService implements PostService {
     public void restorePostById(long postId) {
         postMapper.restorePostById(postId);
         log.info("Restore Complete Post : " + postId);
+    }
+
+    @Override
+    public Post getModifyPostById(long postId) {
+        return postMapper.selectModifyPostById(postId);
     }
 }

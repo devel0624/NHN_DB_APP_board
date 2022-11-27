@@ -10,10 +10,13 @@ import java.util.List;
 
 public interface PostService {
     PostVo getPostById(long postId);
-    Post modifyPost(PostModifyRequest request);
+
+    void modifyPost(PostModifyRequest request);
+
     Post registerPost(PostRegisterRequest request);
     List<PostVo> getAllPost();
     Page<PostVo> getAllPostByPage(long page);
     void hidePostById(long postId);
     void restorePostById(long postId);
+    Post getModifyPostById(long postId);
 }

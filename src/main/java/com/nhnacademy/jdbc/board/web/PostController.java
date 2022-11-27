@@ -1,17 +1,18 @@
 package com.nhnacademy.jdbc.board.web;
 
 import com.nhnacademy.jdbc.board.CookieManager;
+import com.nhnacademy.jdbc.board.exception.UnauthorizedUserRequestException;
 import com.nhnacademy.jdbc.board.exception.ValidationFailedException;
 import com.nhnacademy.jdbc.board.page.Page;
 import com.nhnacademy.jdbc.board.post.domain.Post;
-import com.nhnacademy.jdbc.board.valueobject.PostVo;
 import com.nhnacademy.jdbc.board.post.service.PostService;
-import com.nhnacademy.jdbc.board.valueobject.ReplyVo;
 import com.nhnacademy.jdbc.board.reply.service.ReplyService;
 import com.nhnacademy.jdbc.board.request.PostModifyRequest;
 import com.nhnacademy.jdbc.board.request.PostRegisterRequest;
-import com.nhnacademy.jdbc.board.valueobject.SessionUser;
 import com.nhnacademy.jdbc.board.user.service.UserService;
+import com.nhnacademy.jdbc.board.valueobject.PostVo;
+import com.nhnacademy.jdbc.board.valueobject.ReplyVo;
+import com.nhnacademy.jdbc.board.valueobject.SessionUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
@@ -78,6 +80,10 @@ public class PostController {
 
         Page<PostVo> posts = postService.getAllPostByPage(pageNo);
 
+        if (posts.getPageCount() == 0){
+            pageNo = 0;
+        }
+
         model.addAttribute("sessionUser",user);
         model.addAttribute("posts",posts.getContent());
         model.addAttribute("pages",posts.getPageCount());
@@ -96,10 +102,13 @@ public class PostController {
     }
 
     @GetMapping("/modify")
-    public ModelAndView redirectPostModify(@RequestParam("postId") String postId){
+    public ModelAndView redirectPostModify(@RequestParam("postId") long postId){
+
+        Post post = postService.getModifyPostById(postId);
 
         ModelAndView mav = new ModelAndView();
 
+        mav.addObject("post",post);
         mav.setViewName("post/modify");
 
         return mav;
@@ -113,8 +122,14 @@ public class PostController {
         SessionUser sessionUser = getSessionUser(request);
 
         PostVo post = postService.getPostById(postId);
-        List<ReplyVo> replies = replyService.getRepliesByPostId(postId);
 
+        if (!post.isAvailable()){
+            if (Objects.isNull(sessionUser) || !sessionUser.isAdmin()){
+                throw new UnauthorizedUserRequestException();
+            }
+        }
+
+        List<ReplyVo> replies = replyService.getRepliesByPostId(postId);
 
         mav.addObject("post",post);
         mav.addObject("replies",replies);
@@ -158,17 +173,14 @@ public class PostController {
 
     @PostMapping("/modify")
     public String modifyPost(@Valid @ModelAttribute PostModifyRequest request,
-                             BindingResult result,
-                             Model model){
+                             BindingResult result){
 
         if(result.hasErrors()){
             throw new ValidationFailedException(result);
         }
 
-        Post post = postService.modifyPost(request);
+        postService.modifyPost(request);
 
-        model.addAttribute("post",post);
-
-        return "post/view";
+        return "redirect:/post/view?postId="+ request.getPostId();
     }
 }
