@@ -4,7 +4,7 @@ import com.nhnacademy.jdbc.board.exception.InvalidPasswordException;
 import com.nhnacademy.jdbc.board.exception.UserNotFoundException;
 import com.nhnacademy.jdbc.board.request.UserLoginRequest;
 import com.nhnacademy.jdbc.board.user.domain.User;
-import com.nhnacademy.jdbc.board.user.mapper.UserMapper;
+import com.nhnacademy.jdbc.board.mapper.UserMapper;
 import com.nhnacademy.jdbc.board.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,6 @@ public class DefaultUserService implements UserService {
         this.userMapper = userMapper;
     }
 
-
     @Override
     public User login(UserLoginRequest userLoginRequest) {
 
@@ -43,6 +42,11 @@ public class DefaultUserService implements UserService {
         } else {
             throw new UserNotFoundException();
         }
+    }
+
+    @Override
+    public boolean adminCheck(long userId){
+        return userMapper.isHeAdmin(userId);
     }
 
 }

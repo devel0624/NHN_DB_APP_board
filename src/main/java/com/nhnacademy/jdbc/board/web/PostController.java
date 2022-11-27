@@ -4,14 +4,14 @@ import com.nhnacademy.jdbc.board.CookieManager;
 import com.nhnacademy.jdbc.board.exception.ValidationFailedException;
 import com.nhnacademy.jdbc.board.page.Page;
 import com.nhnacademy.jdbc.board.post.domain.Post;
-import com.nhnacademy.jdbc.board.post.domain.PostVo;
+import com.nhnacademy.jdbc.board.valueobject.PostVo;
 import com.nhnacademy.jdbc.board.post.service.PostService;
-import com.nhnacademy.jdbc.board.reply.domain.Reply;
-import com.nhnacademy.jdbc.board.reply.domain.ReplyVo;
+import com.nhnacademy.jdbc.board.valueobject.ReplyVo;
 import com.nhnacademy.jdbc.board.reply.service.ReplyService;
 import com.nhnacademy.jdbc.board.request.PostModifyRequest;
 import com.nhnacademy.jdbc.board.request.PostRegisterRequest;
-import com.nhnacademy.jdbc.board.user.domain.SessionUser;
+import com.nhnacademy.jdbc.board.valueobject.SessionUser;
+import com.nhnacademy.jdbc.board.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
@@ -33,12 +31,14 @@ import java.util.StringTokenizer;
 @RequestMapping("/post")
 public class PostController {
 
-    PostService postService;
-    ReplyService replyService;
+    private final PostService postService;
+    private final ReplyService replyService;
+    private final UserService userService;
 
-    public PostController(PostService postService, ReplyService replyService) {
+    public PostController(PostService postService, ReplyService replyService, UserService userService) {
         this.postService = postService;
         this.replyService = replyService;
+        this.userService = userService;
     }
 
     @ModelAttribute("sessionUser")
@@ -46,12 +46,17 @@ public class PostController {
 
         try{
             Cookie cookie = CookieManager.getCookie(request);
-
             String userInfo = cookie.getValue();
 
             StringTokenizer st = new StringTokenizer(userInfo,"|");
 
-            return new SessionUser(st.nextToken(),Long.parseLong(st.nextToken()));
+            String name = st.nextToken();
+            long userId = Long.parseLong(st.nextToken());
+            boolean admin = userService.adminCheck(userId);
+
+            log.info(""+admin);
+
+            return new SessionUser(name,userId,admin);
         }catch (Exception e){
             log.info(""+e);
         }
@@ -140,6 +145,13 @@ public class PostController {
     @GetMapping("/delete")
     public String removePost(@RequestParam("postId") long postId){
         postService.hidePostById(postId);
+
+        return "redirect:/post/list";
+    }
+
+    @GetMapping("/restore")
+    public String restorePost(@RequestParam("postId") long postId){
+        postService.restorePostById(postId);
 
         return "redirect:/post/list";
     }

@@ -1,4 +1,4 @@
-package com.nhnacademy.jdbc.board.reply.domain;
+package com.nhnacademy.jdbc.board.valueobject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,4 +14,5 @@ public class ReplyVo {
     String writer;
     String content;
     Timestamp createdAt;
+    boolean available;
 }

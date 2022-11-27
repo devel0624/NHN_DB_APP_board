@@ -1,6 +1,6 @@
 package com.nhnacademy.jdbc.board.config;
 
-import com.nhnacademy.jdbc.board.MapperBase;
+import com.nhnacademy.jdbc.board.mapper.MapperBase;
 import com.p6spy.engine.spy.P6DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.annotations.Mapper;
@@ -8,7 +8,6 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;

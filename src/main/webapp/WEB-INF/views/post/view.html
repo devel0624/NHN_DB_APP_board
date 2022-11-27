@@ -6,40 +6,91 @@
 </head>
 <body>
     <h1>POST VIEW</h1>
-    <hr/>
+<hr/>
     <h2> 제목 : <span th:text="${post.title}"></span> </h2>
     게시글 번호 : <span th:text="${post.postId}"></span>
-    <hr/>
+<hr/>
     작성자 : <span th:text="${post.writerName}"></span> 작성시간 : <span th:text="${post.createdAt}"></span>
-    <hr/>
+<hr/>
     내용 <br>
     <span th:text="${post.content}"></span>
-    <hr/>
+<hr/>
+
+    <!--    게시글 수정 및 삭제  -->
+    <th:block th:unless="${sessionUser} == null">
+        <th:block th:if="${post.available}">
+            <th:block th:if="${post.writerId} == ${sessionUser.id} or ${sessionUser.admin}">
+                <button th:onclick="|location.href='@{/post/modify(postId=${post.postId})}'|">게시글 수정</button>
+            </th:block>
+            <th:block th:if="${post.writerId} == ${sessionUser.id} or ${sessionUser.admin}">
+                <button th:onclick="|location.href='@{/post/delete(postId=${post.postId})}'|">게시글 삭제</button>
+            </th:block>
+        </th:block>
+
+        <th:block th:unless="${post.available}">
+            <th:block th:if="${sessionUser.admin}">
+                <!--                복구(관리자용)   -->
+                <button th:onclick="|location.href='@{/post/restore(postId=${post.postId})}'|">게시글 복구</button>
+            </th:block>
+        </th:block>
+    </th:block>
+<hr/>
 
 <table>
     <h3>댓글 <span th:text="${post.repliesCount}"></span> 개</h3>
-    <span th:if="${replies.isEmpty()}"> 첫 댓글을 달아주세요</span>
+    <span th:if="${replies.isEmpty()}"> 첫 댓글을 달아주세요 </span>
+
     <th:block th:unless="${replies.isEmpty()}">
         <tr>
             <th>작성자</th>
             <th>내용</th>
             <th>작성시간</th>
-            <th>삭제</th>
-        </tr>
-        <tr th:each="reply: ${replies}">
-            <td th:text="${reply.writer}"></td>
-            <td th:text="${reply.content}"></td>
-            <td th:text="${reply.createdAt}"></td>
             <th:block th:unless="${sessionUser} == null">
-                <td th:if="${reply.userId} == ${sessionUser.id}">
-                    <a th:href="@{/reply/delete(replyId=${reply.replyId})}"> 댓글 삭제</a>
-                </td>
+                <th th:if="${sessionUser.admin}"> 댓글 관리 </th>
             </th:block>
         </tr>
+
+<!--    로그인 세션이 존재할 때 댓글-->
+        <th:block th:unless="${sessionUser} == null">
+            <tr th:each="reply: ${replies}">
+                <th:block th:if="${reply.available} or ${sessionUser.admin}">
+                    <td th:text="${reply.writer}"></td>
+                    <td th:text="${reply.content}"></td>
+                    <td th:text="${reply.createdAt}"></td>
+
+<!--                    관리자 및 작성자 본인 댓글 삭제  -->
+                    <th:block th:if="${reply.available}">
+                        <td th:if="${reply.userId} == ${sessionUser.id} or ${sessionUser.admin}">
+                            <button th:onclick="|location.href='@{/reply/delete(replyId=${reply.replyId},postId=${post.postId})}'|"> 댓글 삭제</button>
+                        </td>
+                    </th:block>
+
+                    <th:block th:unless="${reply.available}">
+<!--                        복구(관리자용)  -->
+                        <td th:if="${sessionUser.admin}">
+                            <button th:onclick="|location.href='@{/reply/restore(replyId=${reply.replyId},postId=${post.postId})}'|"> 댓글 복구</button>
+                        </td>
+                    </th:block>
+
+                </th:block>
+            </tr>
+        </th:block>
+<!-- 로그인하지 않은 유저에 대한 댓글 표시 -->
+        <th:block th:if="${sessionUser} == null">
+            <tr th:each="reply: ${replies}">
+                <th:block th:if="${reply.available}">
+                    <td th:text="${reply.writer}"></td>
+                    <td th:text="${reply.content}"></td>
+                    <td th:text="${reply.createdAt}"></td>
+                </th:block>
+            </tr>
+        </th:block>
+
     </th:block>
 </table>
-    <hr/>
 
+<hr/>
+<!--    댓글 작성란  -->
     <th:block th:if="${sessionUser} == null">
         댓글을 작성하려면 로그인해주세요
         <input type="button" onclick="location.href='/login'" value="Login">
@@ -56,13 +107,11 @@
             <input type="submit" value="댓글 작성">
         </form>
     </th:block>
-    <hr/>
+<hr/>
+<!--    목록 버튼   -->
     <input type="button" onclick="location.href='/post/list'" value="목록으로">
-    <th:block th:unless="${sessionUser} == null">
-        <td th:if="${post.writerId} == ${sessionUser.id}">
-            <button th:onclick="|location.href='@{/post/delete(postId=${post.postId})}'|">게시글 삭제</button>
-        </td>
-    </th:block>
+
+
 
 </body>
 </html>

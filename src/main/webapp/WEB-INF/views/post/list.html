@@ -22,21 +22,45 @@
 
 <table>
     <tr>
-        <td>게시물 번호</td>
-        <td>제목</td>
-        <td>작성자</td>
-<!--        <td>좋아요</td>-->
-        <td>댓글 수</td>
-        <td>작성시간</td>
+        <th>게시물 번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+<!--        <th>좋아요</th>-->
+        <th>댓글 수</th>
+        <th>작성시간</th>
+        <th:block th:unless="${sessionUser} == null">
+            <th th:if="${sessionUser.admin}">삭제 여부</th>
+        </th:block>
     </tr>
-    <th:block if>
+
+<!--    로그인 세션이 존재할 때 -->
+    <th:block th:unless="${sessionUser} == null">
         <tr th:each="post:${posts}">
-            <td th:text="${post.postId}"></td>
-            <td> <a th:href="@{/post/view(postId=${post.postId})}"> <span th:text="${post.title}"></span> </a> </td>
-            <td th:text="${post.writerName}"></td>
-            <!--        <td th:text="${post.like}"></td>-->
-            <td th:text="${post.repliesCount}"></td>
-            <td th:text="${post.createdAt}"></td>
+            <th:block th:if="${post.available} or ${sessionUser.admin}">
+                <td th:text="${post.postId}"></td>
+                <td> <a th:href="@{/post/view(postId=${post.postId})}"> <span th:text="${post.title}"></span> </a> </td>
+                <td th:text="${post.writerName}"></td>
+                <!--        <td th:text="${post.like}"></td>-->
+                <td th:text="${post.repliesCount}"></td>
+                <td th:text="${post.createdAt}"></td>
+                <th:block th:unless="${sessionUser} == null">
+                    <td th:if="${sessionUser.admin} and ${!post.available}"> 삭제됨 </td>
+                </th:block>
+            </th:block>
+        </tr>
+    </th:block>
+
+<!-- 로그인 세션이 존재하지 않을때 -->
+    <th:block th:if="${sessionUser} == null">
+        <tr th:each="post:${posts}">
+            <th:block th:if="${post.available}">
+                <td th:text="${post.postId}"></td>
+                <td> <a th:href="@{/post/view(postId=${post.postId})}"> <span th:text="${post.title}"></span> </a> </td>
+                <td th:text="${post.writerName}"></td>
+                <!--        <td th:text="${post.like}"></td>-->
+                <td th:text="${post.repliesCount}"></td>
+                <td th:text="${post.createdAt}"></td>
+            </th:block>
         </tr>
     </th:block>
 
@@ -51,7 +75,6 @@
 <th:block th:unless="${currentPage}>=${pages}">
     <a th:href="@{/post/list(page=${currentPage}+1)}"> >>> </a>
 </th:block>
-
 
 </body>
 </html>

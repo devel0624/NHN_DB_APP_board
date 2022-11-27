@@ -8,4 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
      User login(UserLoginRequest userLoginRequest);
+
+    boolean adminCheck(long userId);
 }

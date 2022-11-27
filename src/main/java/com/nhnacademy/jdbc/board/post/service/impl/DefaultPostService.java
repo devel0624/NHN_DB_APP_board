@@ -1,8 +1,8 @@
 package com.nhnacademy.jdbc.board.post.service.impl;
 
 import com.nhnacademy.jdbc.board.page.Page;
-import com.nhnacademy.jdbc.board.post.domain.PostVo;
-import com.nhnacademy.jdbc.board.post.mapper.PostMapper;
+import com.nhnacademy.jdbc.board.valueobject.PostVo;
+import com.nhnacademy.jdbc.board.mapper.PostMapper;
 import com.nhnacademy.jdbc.board.post.domain.Post;
 import com.nhnacademy.jdbc.board.post.service.PostService;
 import com.nhnacademy.jdbc.board.request.PostModifyRequest;
@@ -69,5 +69,11 @@ public class DefaultPostService implements PostService {
     public void hidePostById(long postId) {
         postMapper.hidePostById(postId);
         log.info("Delete Complete Post : " + postId);
+    }
+
+    @Override
+    public void restorePostById(long postId) {
+        postMapper.restorePostById(postId);
+        log.info("Restore Complete Post : " + postId);
     }
 }

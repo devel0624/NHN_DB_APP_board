@@ -1,4 +1,4 @@
-package com.nhnacademy.jdbc.board.user.domain;
+package com.nhnacademy.jdbc.board.valueobject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,4 +8,5 @@ import lombok.Getter;
 public class SessionUser {
     String name;
     long id;
+    boolean admin;
 }

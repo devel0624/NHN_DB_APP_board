@@ -1,4 +1,4 @@
-package com.nhnacademy.jdbc.board.user.mapper;
+package com.nhnacademy.jdbc.board.mapper;
 
 import com.nhnacademy.jdbc.board.user.domain.User;
 import org.apache.ibatis.annotations.*;
@@ -8,13 +8,14 @@ import java.util.Optional;
 
 @Mapper
 public interface UserMapper {
-    @Select("Select * from DBAppUsers where id = #{id}")
+    @Select("Select * from DBAppUsers where user_id = #{id}")
     Optional<User> selectUser(long id);
-    List<User> selectUsers();
 
+    @Select("Select admin from DBAppUsers where user_id = #{id}")
+    boolean isHeAdmin(long id);
+    List<User> selectUsers();
     @Insert("Insert into DBAppUsers(username, password, created_at) values (#{user.name},#{user.password},now())")
     int insertUser(User user);
-
     void updateNameById(String name, long id);
     void deleteById(long id);
     @Select("Select * from DBAppUsers where username= #{name}")
