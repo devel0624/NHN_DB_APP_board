@@ -15,4 +15,6 @@ public class PostVo {
     long writerId;
     String writerName;
     Timestamp createdAt;
+    long repliesCount;
+    boolean available;
 }

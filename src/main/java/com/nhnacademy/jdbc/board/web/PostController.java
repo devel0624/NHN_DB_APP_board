@@ -2,6 +2,7 @@ package com.nhnacademy.jdbc.board.web;
 
 import com.nhnacademy.jdbc.board.CookieManager;
 import com.nhnacademy.jdbc.board.exception.ValidationFailedException;
+import com.nhnacademy.jdbc.board.page.Page;
 import com.nhnacademy.jdbc.board.post.domain.Post;
 import com.nhnacademy.jdbc.board.post.domain.PostVo;
 import com.nhnacademy.jdbc.board.post.service.PostService;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 @Slf4j
@@ -59,9 +61,22 @@ public class PostController {
 
     @GetMapping(value = {"/","/list"})
     public String redirectPostList(@ModelAttribute("sessionUser") SessionUser user,
+                                   @RequestParam(value = "page", required = false) Optional<Long> page,
                                    Model model){
+        long pageNo;
+
+        if (page.isEmpty() || page.get() < 1){
+            pageNo = 1;
+        }else {
+            pageNo = page.get();
+        }
+
+        Page<PostVo> posts = postService.getAllPostByPage(pageNo);
 
         model.addAttribute("sessionUser",user);
+        model.addAttribute("posts",posts.getContent());
+        model.addAttribute("pages",posts.getPageCount());
+        model.addAttribute("currentPage",pageNo);
 
         return "post/list";
     }
@@ -120,6 +135,13 @@ public class PostController {
         model.addAttribute("post",post);
 
         return "redirect:/post/view?postId="+post.getPostId();
+    }
+
+    @GetMapping("/delete")
+    public String removePost(@RequestParam("postId") long postId){
+        postService.hidePostById(postId);
+
+        return "redirect:/post/list";
     }
 
     @PostMapping("/modify")

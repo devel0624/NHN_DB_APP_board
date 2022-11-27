@@ -51,7 +51,7 @@ public class LoginController {
 
         model.addAttribute("user",user);
 
-        return "redirect:/post/list";
+        return "redirect:/post/list?page=1";
     }
 
     @GetMapping("/logout")
@@ -59,7 +59,7 @@ public class LoginController {
 
         CookieManager.removeLoginSession(request, response);
 
-        return "redirect:/post/list";
+        return "redirect:/post/list?page=1";
     }
 
 

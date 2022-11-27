@@ -20,20 +20,37 @@
     <input type="button" onclick="location.href='/post/register'" value="Register Post">
 </th:block>
 
-<table th:if = "true">
+<table>
     <tr>
+        <td>게시물 번호</td>
         <td>제목</td>
         <td>작성자</td>
-        <td>좋아요</td>
+<!--        <td>좋아요</td>-->
+        <td>댓글 수</td>
         <td>작성시간</td>
     </tr>
-    <tr th:each="post:${posts}">
-        <td th:text="${post.name}"></td>
-        <td th:text="${post.writer}"></td>
-        <td th:text="${post.like}"></td>
-        <td th:text="${post.createdAt}"></td>
-    </tr>
+    <th:block if>
+        <tr th:each="post:${posts}">
+            <td th:text="${post.postId}"></td>
+            <td> <a th:href="@{/post/view(postId=${post.postId})}"> <span th:text="${post.title}"></span> </a> </td>
+            <td th:text="${post.writerName}"></td>
+            <!--        <td th:text="${post.like}"></td>-->
+            <td th:text="${post.repliesCount}"></td>
+            <td th:text="${post.createdAt}"></td>
+        </tr>
+    </th:block>
+
 </table>
+
+<th:block th:unless="${currentPage}<=1">
+    <a th:href="@{/post/list(page=${currentPage}-1)}"> <<< </a>
+</th:block>
+
+<span th:text="${currentPage}"></span> / <span th:text="${pages}"></span>
+
+<th:block th:unless="${currentPage}>=${pages}">
+    <a th:href="@{/post/list(page=${currentPage}+1)}"> >>> </a>
+</th:block>
 
 
 </body>
